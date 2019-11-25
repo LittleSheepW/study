@@ -1,11 +1,14 @@
-package com.ww.jsonNode;
+package com.ww.json.jsonNode;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ww.vo.AfterClassPracticeMyHomeworkVo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -29,14 +32,25 @@ public class StudyJsonNode {
 
 
     /**
-     * readTree() Json字符串转换为JsonNode对象
+     * JsonNode对象转Json字符串
      *
      * @throws IOException
      */
     @Test
-    public void jsonToJsonNodeObject() throws IOException {
-        JsonNode jsonNode = objectMapper.readTree(stringJsonData);
-        log.info("[jsonToJsonNodeObject] [jsonNode:{}]", jsonNode);
+    public void JsonNodeToJsonString() throws IOException {
+        JsonNode outsideJsonNode = objectMapper.readTree(stringJsonData);
+
+        // asText()，如果该节点是一个值节点（方法isValueNode返回true），则该方法将返回容器值的有效String表示形式，否则为空String。
+        JsonNode codeJsonNode = outsideJsonNode.path("code");
+        System.out.println(codeJsonNode.isValueNode());
+        System.out.println(codeJsonNode.asText());
+
+        JsonNode dataJsonNode = outsideJsonNode.path("data");
+        System.out.println(dataJsonNode.isValueNode());
+        // 此方法输出为空字符串
+        System.out.println(dataJsonNode.asText());
+        // JsonNode对象转Json字符串
+        System.out.println(dataJsonNode.toString());
     }
 
     /**
@@ -174,5 +188,22 @@ public class StudyJsonNode {
             log.info("[jsonNodeFields] [遍历获取key:{}]", node.getKey());
             log.info("[jsonNodeFields] [遍历获取值:{}]", node.getValue());
         }
+    }
+
+    /**
+     * 使用ObjectMapper将JSON数据转为相应的泛型数组
+     *
+     * @throws IOException
+     */
+    @Test
+    public void jsonToGenericList() throws IOException {
+        String jsonResult = "{\"code\":0,\"message\":\"成功\",\"data\":{\"totalSize\":2,\"list\":[{\"courseSectionId\":1,\"courseSectionOrder\":1,\"courseSectionName\":\"Java-第一讲\",\"beginTime\":1574654827732,\"degreeOfCompletion\":\"0/6\",\"whetherItIsCompleted\":0,\"choiceQuestionVoList\":[{\"choiceQuestionId\":1,\"choiceQuestionContent\":\"这是第1道选择题\",\"finishedState\":0,\"answer\":null,\"courseId\":1,\"courseSectionId\":1,\"questionType\":1},{\"choiceQuestionId\":2,\"choiceQuestionContent\":\"这是第2道选择题\",\"finishedState\":0,\"answer\":null,\"courseId\":1,\"courseSectionId\":1,\"questionType\":1},{\"choiceQuestionId\":3,\"choiceQuestionContent\":\"这是第3道选择题\",\"finishedState\":0,\"answer\":null,\"courseId\":1,\"courseSectionId\":1,\"questionType\":1},{\"choiceQuestionId\":4,\"choiceQuestionContent\":\"这是第4道选择题\",\"finishedState\":0,\"answer\":null,\"courseId\":1,\"courseSectionId\":1,\"questionType\":1},{\"choiceQuestionId\":5,\"choiceQuestionContent\":\"这是第5道选择题\",\"finishedState\":0,\"answer\":null,\"courseId\":1,\"courseSectionId\":1,\"questionType\":1},{\"choiceQuestionId\":6,\"choiceQuestionContent\":\"这是第6道选择题\",\"finishedState\":0,\"answer\":null,\"courseId\":1,\"courseSectionId\":1,\"questionType\":1}]},{\"courseSectionId\":2,\"courseSectionOrder\":2,\"courseSectionName\":\"Java-第二讲\",\"beginTime\":1574683627732,\"degreeOfCompletion\":\"0/4\",\"whetherItIsCompleted\":0,\"choiceQuestionVoList\":[{\"choiceQuestionId\":7,\"choiceQuestionContent\":\"这是第7道选择题\",\"finishedState\":0,\"answer\":null,\"courseId\":1,\"courseSectionId\":2,\"questionType\":1},{\"choiceQuestionId\":8,\"choiceQuestionContent\":\"这是第8道选择题\",\"finishedState\":0,\"answer\":null,\"courseId\":1,\"courseSectionId\":2,\"questionType\":1},{\"choiceQuestionId\":9,\"choiceQuestionContent\":\"这是第9道选择题\",\"finishedState\":0,\"answer\":null,\"courseId\":1,\"courseSectionId\":2,\"questionType\":1},{\"choiceQuestionId\":10,\"choiceQuestionContent\":\"这是第10道选择题\",\"finishedState\":0,\"answer\":null,\"courseId\":1,\"courseSectionId\":2,\"questionType\":1}]}]}}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode listJsonNode = objectMapper.readTree(jsonResult).findPath("list");
+        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(ArrayList.class, AfterClassPracticeMyHomeworkVo.class);
+        List<AfterClassPracticeMyHomeworkVo> afterClassPracticeMyHomeworkVoList = objectMapper.readValue(listJsonNode.toString(), javaType);
+        System.out.println(afterClassPracticeMyHomeworkVoList);
+
     }
 }

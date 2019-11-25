@@ -1,4 +1,4 @@
-package com.ww.jdk8.sort;
+package com.ww.collection.sort;
 
 import com.ww.entity.Apple;
 import lombok.extern.slf4j.Slf4j;
@@ -90,7 +90,7 @@ public class StudyCollectionSort {
         appleList.sort(comparing);
         log.info("[sortMethod2] [comparingBeforeAppleList:{}]", appleList);
 
-        // 上述方法简写形式  简写形式
+        // 上述方法简写形式
         appleList.sort(Comparator.comparing(Apple::getId));
 
         // 逆序排序
@@ -108,9 +108,6 @@ public class StudyCollectionSort {
         log.info("[sortAfterAgainSort] [comparingBeforeAppleList:{}]", appleList);
     }
 
-    @Test
-    public void test() {
-        // TODO: 2019-11-14 Comparable接口和Comparator接口的区别？
+    // TODO: 2019-11-14 Comparable接口和Comparator接口的区别？
 
-    }
 }

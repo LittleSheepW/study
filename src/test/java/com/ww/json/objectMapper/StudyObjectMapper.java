@@ -1,4 +1,4 @@
-package com.ww.objectMapper;
+package com.ww.json.objectMapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
